@@ -58,10 +58,16 @@ export default class Toolbar extends React.Component {
       const selectionRect = getVisibleSelectionRect(window);
 
       if (!selectionRect) return;
-
+      let calculatedLeft = (selectionRect.left - relativeRect.left) + (selectionRect.width / 2);
+      const expectedLeft = calculatedLeft + (this.toolbar.clientWidth / 2) + 15
+      if (document.body.clientWidth < expectedLeft) {
+        calculatedLeft -= expectedLeft - document.body.clientWidth;
+      }
+      calculatedLeft = calculatedLeft > this.toolbar.clientWidth / 2 ? calculatedLeft : (this.toolbar.clientWidth / 2) + 15;
       const position = {
         top: (selectionRect.top - relativeRect.top) - toolbarHeight,
-        left: (selectionRect.left - relativeRect.left) + (selectionRect.width / 2),
+        left: calculatedLeft,
+        display: 'flex'
       };
       this.setState({ position });
     });
